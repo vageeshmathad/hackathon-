@@ -22,9 +22,22 @@ static_dir = os.path.join(os.path.dirname(__file__), "static")
 os.makedirs(static_dir, exist_ok=True)
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-# Load model and encoder
-MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "model", "flood_model.pkl")
-ENCODER_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "model", "label_encoder.pkl")
+# Robust model loading path to handle different GitHub upload structures
+base_dir = os.path.dirname(__file__)
+parent_dir = os.path.dirname(base_dir)
+
+# Check all possible locations depending on how GitHub was structured
+MODEL_PATH = os.path.join(parent_dir, "model", "flood_model.pkl")
+if not os.path.exists(MODEL_PATH):
+    MODEL_PATH = os.path.join(base_dir, "model", "flood_model.pkl")
+    if not os.path.exists(MODEL_PATH):
+        MODEL_PATH = os.path.join(base_dir, "flood_model.pkl")
+
+ENCODER_PATH = os.path.join(parent_dir, "model", "label_encoder.pkl")
+if not os.path.exists(ENCODER_PATH):
+    ENCODER_PATH = os.path.join(base_dir, "model", "label_encoder.pkl")
+    if not os.path.exists(ENCODER_PATH):
+        ENCODER_PATH = os.path.join(base_dir, "label_encoder.pkl")
 
 # We use exception handling in case the files are missing
 try:
