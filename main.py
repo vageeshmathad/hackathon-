@@ -18,8 +18,17 @@ app.add_middleware(
 )
 
 # Mount static directory for plots
+import shutil
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 os.makedirs(static_dir, exist_ok=True)
+
+# Fix for flattened GitHub structure: copy images from root to static folder
+for img in ["flood_distribution.png", "place_vs_flood.png", "correlation_heatmap.png"]:
+    src_path = os.path.join(os.path.dirname(__file__), img)
+    dst_path = os.path.join(static_dir, img)
+    if os.path.exists(src_path) and not os.path.exists(dst_path):
+        shutil.copy(src_path, dst_path)
+
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Robust model loading path to handle different GitHub upload structures
