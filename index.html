@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flood Risk Intelligence Dashboard</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="dashboard-wrapper">
+      <!-- Sidebar / Brand -->
+      <nav class="sidebar">
+        <div class="brand">
+          <div class="brand-icon">🌊</div>
+          <h1>Flood<br/>Intelligence</h1>
+        </div>
+        <div class="nav-links">
+          <a href="#" class="nav-link active" data-target="view-overview">Overview</a>
+          <a href="#" class="nav-link" data-target="view-analytics">Analytics</a>
+          <a href="#" class="nav-link" data-target="view-settings">Settings</a>
+        </div>
+        <div class="user-profile">
+          <span>Admin System</span>
+        </div>
+      </nav>
+
+      <!-- View: Overview (Map + Prediction) -->
+      <div id="view-overview" class="view active view-grid">
+        <!-- Main Map Area -->
+        <main class="map-container">
+          <div id="map"></div>
+        </main>
+
+        <!-- Right Control Panel -->
+        <aside class="control-panel glass-card">
+          <h2>Flood Risk Assessment</h2>
+          <p class="panel-subtitle">Select a known region, click anywhere on the map, or type a custom location.</p>
+          
+          <form id="prediction-form">
+            <div class="form-group">
+              <label for="place">Region</label>
+              <input type="text" id="place" list="place-options" placeholder="e.g. Chennai or Custom" required />
+              <datalist id="place-options">
+                <option value="CHENNAI"></option>
+                <option value="DELHI"></option>
+                <option value="KOLKATA"></option>
+                <option value="LOHIT"></option>
+                <option value="MUMBAI"></option>
+                <option value="NICOBAR"></option>
+              </datalist>
+            </div>
+
+            <div class="form-group">
+              <label for="monsoonintensity">Monsoon Intensity (0-1)</label>
+              <input type="number" id="monsoonintensity" min="0" max="1" step="0.001" placeholder="e.g. 0.25" required />
+            </div>
+
+            <div class="form-group">
+              <label for="urbanization">Urbanization Level (0-1)</label>
+              <input type="number" id="urbanization" min="0" max="1" step="0.001" placeholder="e.g. 0.05" required />
+            </div>
+
+            <div class="form-group">
+              <label for="topographydrainage">Topography Drainage (0-1)</label>
+              <input type="number" id="topographydrainage" min="0" max="1" step="0.001" placeholder="e.g. 0.35" required />
+            </div>
+
+            <div id="form-error" class="form-error hidden"></div>
+            <button type="submit" class="btn-primary">Predict Risk</button>
+          </form>
+
+          <div id="result-box" class="result-box hidden">
+            <div class="result-header">
+              <h3 id="result-status"></h3>
+              <div id="result-icon"></div>
+            </div>
+            <div class="prob-bar-container">
+              <div id="prob-bar" class="prob-bar"></div>
+            </div>
+            <p>Probability: <strong id="result-prob"></strong></p>
+          </div>
+
+          <div class="mini-insights">
+            <h3>Regional Insights</h3>
+            <img id="insight-chart" alt="Insights" />
+          </div>
+        </aside>
+      </div> <!-- End View: Overview -->
+
+      <!-- View: Analytics -->
+      <div id="view-analytics" class="view hidden">
+        <header class="view-header">
+          <h2>Data Intelligence & Analytics</h2>
+          <p>Comprehensive insights derived from the hackathon dataset.</p>
+        </header>
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <h3>Flood Occurrences Distribution</h3>
+            <img id="dist-chart" alt="Flood Distribution" />
+          </div>
+          <div class="analytics-card">
+            <h3>Regional Impact Analysis</h3>
+            <img id="reg-chart" alt="Place vs Flood" />
+          </div>
+          <div class="analytics-card">
+            <h3>Environmental Feature Correlation</h3>
+            <img id="corr-chart" alt="Correlation Heatmap" />
+          </div>
+        </div>
+      </div>
+
+      <!-- View: Settings -->
+      <div id="view-settings" class="view hidden">
+        <header class="view-header">
+          <h2>System Settings</h2>
+          <p>Configure dashboard preferences and ML API endpoints.</p>
+        </header>
+        <div class="settings-container">
+          <div class="settings-card glass-card">
+            <div class="form-group">
+              <label>Prediction API Endpoint</label>
+              <input type="text" id="api-endpoint-display" disabled />
+              <p class="setting-desc">The FastAPI backend URL driving the machine learning model.</p>
+            </div>
+            <div class="form-group">
+              <label>Dashboard Theme</label>
+              <select>
+                <option value="dark">Professional Dark Mode (Active)</option>
+                <option value="light" disabled>Light Mode (Coming Soon)</option>
+              </select>
+            </div>
+            <button class="btn-primary" style="max-width: 200px;">Save Configuration</button>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- End Dashboard Wrapper -->
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
